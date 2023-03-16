@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\ThreadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,9 +35,22 @@ Route::group([
 
 Route::group([
     'middleware' => 'api',
-    'prefix' => 'post'
+    'prefix' => 'posts'
 ], function ($router) {
     Route::post('create', [PostController::class, 'create']);
     Route::put('/{post}', [PostController::class, 'update']);
     Route::delete('/{post}', [PostController::class, 'delete']);
+});
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'courses'
+], function ($router) {
+    Route::post('create', [CourseController::class, 'create']);
+    Route::post('/{course}/join', [CourseController::class, 'join']);
+    Route::delete('/{course}', [CourseController::class, 'delete']);
+    Route::post('/{course}/threads/create', [ThreadController::class, 'create']);
+    Route::get('/{course}/threads', [ThreadController::class, 'index']);
+    Route::post('/{course}/threads/{thread}/comment', [ThreadController::class, 'comment']);
+    Route::delete('/{course}/threads/{thread}/comment-threads/{commentThread}', [ThreadController::class, 'deleteCommentThread']);
 });
