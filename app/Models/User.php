@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Post;
 use App\Models\UserDetail;
+use App\Models\CommentThread;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
@@ -31,6 +32,7 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'password',
         'role',
+        'instructor_id'
     ];
 
     /**
@@ -80,5 +82,25 @@ class User extends Authenticatable implements JWTSubject
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'user_courses');
+    }
+
+    public function commentThreads()
+    {
+        return $this->hasMany(CommentThread::class);
+    }
+
+    public function students()
+    {
+        return $this->hasMany(User::class, 'instructor_id');
+    }
+
+    public function instructor()
+    {
+        return $this->belongsTo(User::class, 'instructor_id');
     }
 }
